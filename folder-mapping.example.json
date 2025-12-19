@@ -1,0 +1,19 @@
+{
+  "timestamp": "2025-12-19T17:00:00Z",
+  "folders": [
+    {
+      "name": "AVOLTA_2026_Data",
+      "id": "1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p"
+    },
+    {
+      "name": "Analisi_Mercato_Energia",
+      "id": "2p3q4r5s6t7u8v9w0x1y2z3a4b5c6d7"
+    },
+    {
+      "name": "Reporting_Mensile",
+      "id": "3e4f5g6h7i8j9k0l1m2n3o4p5q6r7s8"
+    }
+  ],
+  "syncRootPath": "drive_sync",
+  "notes": "Generato da setup_folders.js - Seleziona le cartelle da sincronizzare con GitHub"
+}
