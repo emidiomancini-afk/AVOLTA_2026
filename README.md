@@ -28,6 +28,28 @@ Agente automatico che sincronizza il repository AVOLTA_2026 con Google Drive.
    - Crea una cartella dedicata per il sync
    - Copia l'ID della cartella (visibile nell'URL: `/drive/folders/ID_CARTELLA`)
    - Condividi con l'email del Service Account (vedi nel JSON scaricato)
+  
+   - ### 💫 Selezione Cartelle Google Drive
+
+Prima di avviare l'agent, devi selezionare quali cartelle di Google Drive sincronizzare:
+
+```bash
+# 1. Esegui lo script di setup
+node setup_folders.js
+
+# 2. L'app ti mostrerà tutte le cartelle disponibili nel tuo Drive
+# 3. Seleziona i numeri delle cartelle che desideri sincronizzare
+# Esempio: 1,3,5 (sincronizza cartelle 1, 3 e 5)
+
+# 4. Automaticamente verrà creato: folder-mapping.json
+```
+
+**Nota importante:**
+- Il file `folder-mapping.json` viene **GENERATO** automaticamente da `setup_folders.js`
+- Contiene l'elenco delle cartelle selezionate
+- NON modificare manualmente (verrà sovrascritto al prossimo setup)
+- Aggiungi `folder-mapping.json` al `.gitignore` se vuoi privacy
+- 
 
 ### 🚀 Setup Rapido
 
@@ -53,6 +75,8 @@ npm start
 - **sync_drive_agent.js**: Logica principale dell'agente
 - **.env.example**: Template di configurazione
 - **package.json**: Dipendenze npm
+- - **setup_folders.js**: Script interattivo per selezionare cartelle da sincronizzare
+  - - **folder-mapping.json**: Configurazione cartelle selezionate (generato automaticamente)
 
 ### 🔄 Scheduling
 
