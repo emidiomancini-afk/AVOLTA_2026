@@ -1,0 +1,44 @@
+{
+  "syncName": "AVOLTA_Data_3Days",
+  "description": "Sincronizzazione cartella Google Drive ogni 3 giorni nel repository AVOLTA_2026",
+  "enabled": true,
+  "schedule": {
+    "interval": "every 3 days",
+    "cron": "0 0 */3 * *",
+    "timezone": "Europe/Rome",
+    "notes": "Esegui ogni 3 giorni alle 00:00 CET"
+  },
+  "source": {
+    "type": "google_drive",
+    "folderId": "1xjsQKJYXq0WtazeemCOmbbsEGRXMD29T",
+    "folderName": "AVOLTA_Data",
+    "folderUrl": "https://drive.google.com/drive/folders/1xjsQKJYXq0WtazeemCOmbbsEGRXMD29T",
+    "syncSubfolders": true,
+    "fileTypes": ["*"],
+    "maxDepth": null
+  },
+  "destination": {
+    "type": "github_repository",
+    "owner": "emidiomancini-afk",
+    "repo": "AVOLTA_2026",
+    "branch": "main",
+    "path": "drive_sync/AVOLTA_Data",
+    "autoCommit": true
+  },
+  "sync": {
+    "strategy": "mirror",
+    "overwriteExisting": true,
+    "deleteRemovedFiles": false,
+    "notes": "Mirror: sincronizza Drive → GitHub, non cancella file"
+  },
+  "logging": {
+    "level": "info",
+    "logFile": "logs/sync_3days.log",
+    "keepLogs": 30
+  },
+  "metadata": {
+    "created": "2025-12-19T18:00:00Z",
+    "lastModified": "2025-12-19T18:00:00Z",
+    "nextSync": "TBD"
+  }
+}
