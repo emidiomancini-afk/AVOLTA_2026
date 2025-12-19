@@ -5,6 +5,7 @@
   "main": "sync_drive_agent.js",
   "scripts": {
     "start": "node sync_drive_agent.js",
+        "sync:3days": "node sync_drive_3days.js",
     "dev": "nodemon sync_drive_agent.js"
   },
   "keywords": ["github", "drive", "sync", "agent", "automation"],
