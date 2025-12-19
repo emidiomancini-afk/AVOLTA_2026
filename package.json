@@ -1,0 +1,23 @@
+{
+  "name": "avolta-2026-sync-agent",
+  "version": "1.0.0",
+  "description": "Agent per sincronizzazione automatica GitHub to Google Drive",
+  "main": "sync_drive_agent.js",
+  "scripts": {
+    "start": "node sync_drive_agent.js",
+    "dev": "nodemon sync_drive_agent.js"
+  },
+  "keywords": ["github", "drive", "sync", "agent", "automation"],
+  "author": "AVOLTA_2026",
+  "license": "MIT",
+  "dependencies": {
+    "@octokit/rest": "^19.0.0",
+    "google-auth-library": "^8.0.0",
+    "googleapis": "^118.0.0",
+    "node-cron": "^3.0.0",
+    "dotenv": "^16.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.0"
+  }
+}
