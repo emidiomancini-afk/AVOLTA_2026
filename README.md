@@ -136,3 +136,68 @@ npm run dev  # Avvia con nodemon (reload automatico)
 ---
 
 **AVOLTA_2026** - Assistente esperto in Data Architecture & Governance
+
+
+## 📅 Sincronizzazione Ogni 3 Giorni
+
+Puoi sincronizzare una specifica cartella Google Drive nel repository **ogni 3 giorni** in automatico:
+
+### Configurazione
+
+Modifica il file `sync-config-3days.json` con:
+- **Folder ID**: ID della cartella Google Drive da sincronizzare
+- **Destination path**: Cartella di destinazione nel repository
+- **Schedule**: Frequenza (default: ogni 3 giorni a mezzanotte CET)
+
+### Esecuzione
+
+```bash
+# Sincronizzazione manuale
+npm run sync:3days
+
+# Oppure direttamente
+node sync_drive_3days.js
+```
+
+### Cron Schedule
+
+Il cron `0 0 */3 * *` significa:
+- **0**: Al minuto 0
+- **0**: All'ora 0 (mezzanotte)
+- **/3**: Ogni 3 giorni
+- ***: Ogni mese
+- ***: Ogni giorno della settimana
+
+### Esempio: Sincronizzazione AVOLTA_Data
+
+Esempio già configurato nel repository:
+
+```json
+{
+  "source": {
+    "folderId": "1xjsQKJYXq0WtazeemCOmbbsEGRXMD29T",
+    "folderName": "AVOLTA_Data"
+  },
+  "destination": {
+    "path": "drive_sync/AVOLTA_Data"
+  },
+  "schedule": {
+    "cron": "0 0 */3 * *"
+  }
+}
+```
+
+### File Utilizzati
+
+- **sync-config-3days.json**: Configurazione di sincronizzazione
+- **sync_drive_3days.js**: Script Node.js che implementa la sincronizzazione
+- **package.json**: Script npm `sync:3days`
+
+### Note
+
+- La sincronizzazione esegue il **mirror** della cartella Drive nel repository
+- Non cancella file dal repository quando rimossi da Drive (protezione)
+- Supporta cartelle annidate e file di qualsiasi tipo
+- I log sono salvati in `logs/sync_3days.log`
+
+---
