@@ -1,0 +1,35 @@
+{
+  "timestamp": "2025-12-19T18:30:00Z",
+  "folders": [
+    {
+      "name": "AVOLTA_Data",
+      "id": "1xjsQKJYXq0WtazeemCOmbbsEGRXMD29T",
+      "description": "Cartella principale con tutti i dati AVOLTA - Include sottocartelle",
+      "syncSubfolders": true,
+      "recursive": true
+    },
+    {
+      "name": "CREAZIONE NUOVO BRAND",
+      "id": "1ls1k_CHyTEakoOlv3OozJa1tQ94Ho5zm",
+      "description": "Cartella con schede apertura brand - Richiede export Google Sheets",
+      "syncSubfolders": true,
+      "recursive": true,
+      "exportGoogleSheets": true
+    }
+  ],
+  "syncRootPath": "drive_sync",
+  "settings": {
+    "overwriteExisting": true,
+    "deleteRemovedFiles": false,
+    "recursive": true,
+    "maxDepth": null,
+    "fileTypes": ["*"],
+    "exportFormats": {
+      "application/vnd.google-apps.spreadsheet": "xlsx",
+      "application/vnd.google-apps.document": "docx",
+      "application/vnd.google-apps.presentation": "pptx"
+    }
+  },
+  "notes": "Generato da setup_folders.js - Configurazione completa per sincronizzazione bidirezionale",
+  "lastModified": "2025-12-19T18:30:00Z"
+}
