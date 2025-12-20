@@ -1,8 +1,8 @@
-name: Sync Drive (7 Times Daily)
+name: Sync Drive (Every 2 Hours)
 on:
   schedule:
-    # Run 7 times daily at 10,12,14,16,18,20,00 UTC
-    - cron: '0 10,12,14,16,18,20,0 * * *'
+      # Run every 2 hours from 10 to 22 UTC
+      - cron: '0 10,12,14,16,18,20,22 * * *'
   workflow_dispatch:
     # Allow manual trigger
 
