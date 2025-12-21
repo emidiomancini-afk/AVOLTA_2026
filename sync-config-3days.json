@@ -3,11 +3,8 @@
   "description": "Sincronizzazione cartella Google Drive ogni 3 giorni nel repository AVOLTA_2026",
   "enabled": true,
   "schedule": {
-    "interval": "every 3 days",
-    "cron": "0 0 */3 * *",
-    "timezone": "Europe/Rome",
-    "notes": "Esegui ogni 3 giorni alle 00:00 CET"
-  },
+"cron": "0 10,12,14,16,18,20,22 * * *",    "timezone": "Europe/Rome",
+"Esegui ogni 2 ore dalle 10 alle 22 UTC"  },
   "source": {
     "type": "google_drive",
     "folderId": "1xjsQKJYXq0WtazeemCOmbbsEGRXMD29T",
