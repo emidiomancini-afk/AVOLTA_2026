@@ -2,9 +2,7 @@
 /**
  * AVOLTA_2026 - Sync Drive Every 3 Days
  * Sincronizza una cartella Google Drive nel repository GitHub ogni 3 giorni
- * Folder: https://drive.google.com/drive/folders/1xjsQKJYXq0WtazeemCOmbbsEGRXMD29T
  */
-
 const { GoogleAuth } = require('google-auth-library');
 const { google } = require('googleapis');
 const fs = require('fs');
@@ -26,9 +24,9 @@ class DriveSync3Days {
         scopes: ['https://www.googleapis.com/auth/drive.readonly']
       });
       this.drive = google.drive({ version: 'v3', auth: this.auth });
-      console.log('\u2713 Autenticazione Google Drive completata');
+      console.log('✓ Autenticazione Google Drive completata');
     } catch (err) {
-      console.error('\u2717 Errore autenticazione:', err.message);
+      console.error('✗ Errore autenticazione:', err.message);
       process.exit(1);
     }
   }
@@ -49,23 +47,56 @@ class DriveSync3Days {
     }
   }
 
-  async downloadFile(fileId, fileName, localPath) {
+  async downloadFile(file, localPath) {
+    const { id: fileId, name: fileName, mimeType } = file;
     try {
-      const dest = fs.createWriteStream(localPath);
-      const { data } = await this.drive.files.get(
-        { fileId, alt: 'media' },
-        { responseType: 'stream' }
-      );
+      let destPath = localPath;
+      let response;
+
+      if (mimeType.startsWith('application/vnd.google-apps.')) {
+        let exportMimeType;
+        let extension;
+
+        if (mimeType.includes('spreadsheet')) {
+          exportMimeType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+          extension = '.xlsx';
+        } else if (mimeType.includes('document')) {
+          exportMimeType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+          extension = '.docx';
+        } else if (mimeType.includes('presentation')) {
+          exportMimeType = 'application/vnd.openxmlformats-officedocument.presentationml.presentation';
+          extension = '.pptx';
+        } else {
+          exportMimeType = 'application/pdf';
+          extension = '.pdf';
+        }
+
+        if (!destPath.toLowerCase().endsWith(extension)) {
+          destPath += extension;
+        }
+
+        response = await this.drive.files.export(
+          { fileId, mimeType: exportMimeType },
+          { responseType: 'stream' }
+        );
+      } else {
+        response = await this.drive.files.get(
+          { fileId, alt: 'media' },
+          { responseType: 'stream' }
+        );
+      }
+
+      const dest = fs.createWriteStream(destPath);
       return new Promise((resolve, reject) => {
-        data.on('end', () => {
-          console.log(`\u2713 Scaricato: ${fileName}`);
+        response.data.on('end', () => {
+          console.log(`✓ Salvato: ${path.basename(destPath)}`);
           resolve();
         });
-        data.on('error', reject);
-        data.pipe(dest);
+        response.data.on('error', reject);
+        response.data.pipe(dest);
       });
     } catch (err) {
-      console.error(`Errore download ${fileName}:`, err.message);
+      console.error(`✗ Errore download ${fileName}:`, err.message);
     }
   }
 
@@ -73,10 +104,8 @@ class DriveSync3Days {
     if (!fs.existsSync(localPath)) {
       fs.mkdirSync(localPath, { recursive: true });
     }
-
     let allFiles = [];
     let pageToken = null;
-
     do {
       const { files, nextPageToken } = await this.listFolderContents(folderId, pageToken);
       allFiles = allFiles.concat(files);
@@ -88,47 +117,42 @@ class DriveSync3Days {
       if (file.mimeType === 'application/vnd.google-apps.folder') {
         await this.syncFolderRecursive(file.id, filePath);
       } else {
-        await this.downloadFile(file.id, file.name, filePath);
+        await this.downloadFile(file, filePath);
       }
     }
   }
 
   async performSync() {
     const timestamp = new Date().toISOString();
-    console.log(`\n[${timestamp}] \ud83d\udd04 Avvio sincronizzazione cartella Drive (ogni 3 giorni)...`);
-    console.log(`\ud83d\udcc1 Cartella: ${this.config.source.folderName}`);
-    console.log(`\ud83d\udcc4 ID: ${this.config.source.folderId}`);
-
+    console.log(`
+[${timestamp}] 🔄 Avvio sincronizzazione cartella Drive...`);
     try {
       const syncPath = path.join(process.cwd(), this.config.destination.path);
       await this.syncFolderRecursive(this.config.source.folderId, syncPath);
-      console.log(`\u2713 Sync completato: ${this.config.destination.path}`);
-      console.log(`\u23f3 Prossimo sync: tra 3 giorni\n`);
+      console.log(`✓ Sync completato: ${this.config.destination.path}`);
     } catch (err) {
-      console.error('Errore sync:', err.message);
+      console.error('✗ Errore sync:', err.message);
     }
   }
 
   start() {
-    console.log('\ud83e\udd16 Agent Sync Drive - AVOLTA_2026');
+    console.log('🤖 Agent Sync Drive - AVOLTA_2026');
     console.log('======================================');
-    console.log(`Configurazione: ${this.config.syncName}`);
-    console.log(`Frequenza: ${this.config.schedule.interval}`);
-    console.log(`Cron: ${this.config.schedule.cron}`);
-    console.log('');
-
-    // Sync immediato
-    this.performSync();
-
-    // Scheduled: ogni 3 giorni (cron: "0 0 */3 * *")
-    // Esegui a mezzanotte ogni 3 giorni
-    cron.schedule('0 0 */3 * *', () => {
-      this.performSync();
-    }, {
-      timezone: this.config.schedule.timezone
+    this.performSync().then(() => {
+      if (process.env.GITHUB_ACTIONS) {
+        console.log('Esecuzione completata.');
+        process.exit(0);
+      }
     });
 
-    console.log('\ud83d\udcc5 Prossimo sync programmato (ogni 3 giorni)...');
+    if (!process.env.GITHUB_ACTIONS) {
+      cron.schedule(this.config.schedule.cron || '0 0 */3 * *', () => {
+        this.performSync();
+      }, {
+        timezone: this.config.schedule.timezone || "Europe/Rome"
+      });
+      console.log(`📅 Prossimo sync programmato: ${this.config.schedule.cron}`);
+    }
   }
 }
 
