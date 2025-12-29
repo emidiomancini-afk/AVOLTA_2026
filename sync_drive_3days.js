@@ -46,7 +46,7 @@ class DriveSync3Days {
   async listFolderContents(folderId, pageToken = null) {
     try {
       const { data: result } = await this.drive.files.list({
-        q: \`${folderId}`in parents and trashed=false\`,
+        q: `${folderId}` in parents and trashed=false`,
         spaces: 'drive',
         pageSize: 100,
         fields: 'nextPageToken, files(id, name, mimeType, modifiedTime)',
